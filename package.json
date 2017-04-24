@@ -1,0 +1,27 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "homework 12",
+  "main": "index.js",
+  "dependencies": {
+    "inquirer": "^3.0.6",
+    "mysql": "^2.13.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "yes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhan30/Bamazon-app.git"
+  },
+  "keywords": [
+    "bamazon"
+  ],
+  "author": "david",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhan30/Bamazon-app/issues"
+  },
+  "homepage": "https://github.com/dhan30/Bamazon-app#readme"
+}
