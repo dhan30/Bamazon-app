@@ -108,7 +108,7 @@ function itemInfo(userchoice) {
 			//UPDATE DATABASE
 				connection.query("UPDATE item_list SET ? WHERE ?", [{
 				stock_quantity: total
-				}, { item_id: "1001"
+				}, { item_id: res[userchoice].item_id
 
 				}], function(err, res) {
 					if (err) throw err;
