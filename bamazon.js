@@ -14,37 +14,35 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
 	if (err) throw err;
 	// console.log("id: " + connection.threadId);
-	
+		// displayItems();
+});	
+
+
+// 	// CONNECTING TO DATABASE TO DISPLAY TABLE INFORMATION
+connection.query("SELECT * FROM item_list ", function (err, res) {
+		// DISPLAY LIST OF ITEMS AVAILABLE FOR PURCHASE
+	if(err) throw err;
+	console.log("Here are list of items available for purchase: " +"\nitem#: " );
+	for (var i = 0; i < 10; i++) { 
+		console.log("\nitem#: " + res[i].item_id + " || "+ " name: " + res[i].product_name);
+	}	
 });
-
-// ARRAY FOR LIST OF ITEMS
-// var arrayItem = ["100-1","100-2","100-3","100-4","100-5","100-6","100-7","100-8", "100-9", "10-10"];
-	
-	connection.query("SELECT * FROM item_list ", function (err, res) {
-		console.log("Here are list of items available for purchase: " +
-				"\nitem#: " );
-		for (var i = 0; i < 10; i++) { 
-			console.log("\nitem#: " + res[i].item_id + " || "+ " name: " + res[i].product_name);
-			
-		}
-	})
-
-	
-
 
 // GRAB TABLE IN DATABASE AND START APP
 connection.query("SELECT * FROM item_list", function(err, res) {
 	if(err) throw err;
-	
-
 	//CALL FUNCTION TO START PROMPT
+	
 	itemSearch();
 })
 
-// PROMPT QUESTIONS 
+
+
+
+// FUNCTIONS  -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------
 var itemSearch = function () {
-
-
+	//START PROMPT OF QUESTIONS
 	inquirer.prompt({
 		type: 'list',
 		name: 'items',
@@ -67,16 +65,9 @@ var itemSearch = function () {
 	
 	
 	});
-
-
 }
-
-
-function getItemInfo (item_id) {
-	connection.query();
-
-};
-
+// -----------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------
 function itemInfo(userchoice) {
 			
 			// CREATE CONNECTION AND QUERY TO SHOW ITEM CHOSEN
@@ -85,44 +76,52 @@ function itemInfo(userchoice) {
 		for ( var i = 0; i < res.length; i ++) {
 			console.log("ID#: " + res[userchoice].item_id + " ||" + " Name: " + res[userchoice].product_name + " ||" + 
 			" Stock: " + res[userchoice].stock_quantity);
-				break;
-				
-				 }
-
-				//--------------------------------------------------------------------------
-		
+				break;		
+		}		
 			inquirer.prompt({
 			type: 'input',
 			name: 'quantity',
 			message: "How many of these items would you like to purhchase?"
 	
 			}).then(function (answers) {
+			
+				//CREATE FUNCTION TO UPDATE DATA
+				var updateData = function () {
 			//HOW MANY ITEMS ARE LEFT IN STOCK AND SAVE TO VARIABLE
-				var countItem = res[userchoice].stock_quantity;
+					var countItem = res[userchoice].stock_quantity;
 			// USER INPUT OF HOW MANY ITEMS THEY WANT
-				var quantity = answers.quantity;
+					var quantity = answers.quantity;
 			// TOTAL PRICE OF ITEMS SELECTED
-				var totalPrice = answers.quantity * res[userchoice].price;
+					var totalPrice = answers.quantity * res[userchoice].price;
 			// TOTAL STOCK AMOUNT AFTER PURCHASE
-				var total = countItem - quantity;
+					var total = countItem - quantity;
 			//UPDATE DATABASE
-				connection.query("UPDATE item_list SET ? WHERE ?", [{
-				stock_quantity: total
-				}, { item_id: res[userchoice].item_id
+					
+					connection.query("UPDATE item_list SET ? WHERE ?", [{
+					stock_quantity: total
+					}, { item_id: res[userchoice].item_id
 
-				}], function(err, res) {
-					if (err) throw err;
-				// console.log(res);
-				})
-					// IF STOCK IS EMPTY
-					if (total < 0){
-					console.log("ERROR***NOT AVAILABLE IN STOCK*****");
+					}], function(err, res) {
+						if (err) throw err;
+				
+					})
+						// IF STOCK IS EMPTY
+						if (total < 0) {
+						//LOG OUT NOT AVAILABLE
+						console.log("ERROR***NOT AVAILABLE IN STOCK*****");
 
-					} else {
-						console.log("There are " + total + " left!");
-						console.log("Your total purchase cost is: " + totalPrice);
+						} else {
+							//UPDATE DATABASE AND DISPLAY LEFT AMOUT OF ITEMS
+							console.log("There are " + total + " left!");
+							// DISPLAY TOTAL PRICE OF ITEMS
+							console.log("Your total purchase cost is: " + totalPrice);
+						}
+
 					}
+				// CALL UPDATE FUNCTION
+				updateData();
 
 		});//then9function9answers
 	})
 };
+
